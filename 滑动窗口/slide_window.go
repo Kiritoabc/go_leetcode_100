@@ -1,5 +1,7 @@
 package main
 
+import "math"
+
 // 8.
 // 给定一个字符串 s ，请你找出其中不含有重复字符的 最长子串 的长度。
 func lengthOfLongestSubstring(s string) int {
@@ -114,4 +116,44 @@ func maxSlidingWindow(nums []int, k int) []int {
 		res = append(res, queue.Front())
 	}
 	return res
+}
+
+// 12.
+func minWindow(s string, t string) string {
+	ori, cnt := map[byte]int{}, map[byte]int{}
+	for i := 0; i < len(t); i++ {
+		ori[t[i]]++
+	}
+
+	sLen := len(s)
+	len := math.MaxInt32
+	ansL, ansR := -1, -1
+
+	check := func() bool {
+		for k, v := range ori {
+			if cnt[k] < v {
+				return false
+			}
+		}
+		return true
+	}
+	for l, r := 0, 0; r < sLen; r++ {
+		if r < sLen && ori[s[r]] > 0 {
+			cnt[s[r]]++
+		}
+		for check() && l <= r {
+			if r-l+1 < len {
+				len = r - l + 1
+				ansL, ansR = l, l+len
+			}
+			if _, ok := ori[s[l]]; ok {
+				cnt[s[l]] -= 1
+			}
+			l++
+		}
+	}
+	if ansL == -1 {
+		return ""
+	}
+	return s[ansL:ansR]
 }
