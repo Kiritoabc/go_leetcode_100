@@ -50,3 +50,21 @@ func reverseList(head *ListNode) *ListNode {
 	head.Next = nil
 	return newHead
 }
+
+// 20 回文链表
+// 给你一个单链表的头节点 head ，请你判断该链表是否为回文链表。如果是，返回 true ；否则，返回 false 。
+func isPalindrome(head *ListNode) bool {
+	values := []int{}
+	for head != nil {
+		values = append(values, head.Val)
+		head = head.Next
+	}
+	n := len(values)
+	for i, v := range values[:n/2] {
+		if v != values[n-1-i] {
+			return false
+		}
+	}
+
+	return true
+}
