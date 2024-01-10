@@ -68,3 +68,48 @@ func isPalindrome(head *ListNode) bool {
 
 	return true
 }
+
+/*
+func isPalindrome(head *ListNode) bool {
+	if head == nil {
+        return true
+    }
+
+    firstHeadEnd := endofFirstHalf(head)
+    secondHalfStart := reverseList(firstHeadEnd.Next)
+
+    p1 := head
+    p2 := secondHalfStart
+    result := true
+    for result && p2 != nil {
+        if p1.Val != p2.Val {
+            return false
+        }
+        p1 = p1.Next
+        p2 = p2.Next
+    }
+    firstHeadEnd.Next = reverseList(secondHalfStart)
+    return result
+}
+
+func reverseList(head *ListNode) *ListNode {
+    var prev,cur *ListNode = nil,head
+    for cur != nil {
+        temp := cur.Next
+        cur.Next = prev
+        prev = cur
+        cur = temp
+    }
+    return prev
+}
+
+func endofFirstHalf (head *ListNode) *ListNode {
+     fast := head
+    slow := head
+    for fast.Next != nil && fast.Next.Next != nil {
+        fast = fast.Next.Next
+        slow = slow.Next
+    }
+    return slow
+}
+*/
