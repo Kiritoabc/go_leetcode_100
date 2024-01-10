@@ -24,3 +24,29 @@ func getIntersectionNode(headA, headB *ListNode) *ListNode {
 	}
 	return nil
 }
+
+// 19.反转链表
+// 给你单链表的头节点 head ，请你反转链表，并返回反转后的链表。
+
+func reverseList(head *ListNode) *ListNode {
+	/*
+		迭代：
+		   var prev *ListNode
+		    curr := head
+		    for curr!=nil {
+		        temp := curr.Next
+		        curr.Next = prev
+		        prev = curr
+		        curr = temp
+		    }
+		    return prev
+	*/
+
+	if head == nil || head.Next == nil {
+		return head
+	}
+	newHead := reverseList(head.Next)
+	head.Next.Next = head
+	head.Next = nil
+	return newHead
+}
