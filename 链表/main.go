@@ -113,3 +113,124 @@ func endofFirstHalf (head *ListNode) *ListNode {
     return slow
 }
 */
+
+// 21.环形链表
+func hasCycle(head *ListNode) bool {
+	var headMap = map[*ListNode]int{}
+	h := head
+	for h != nil {
+		if _, ok := headMap[h]; ok {
+			return true
+		}
+		headMap[h] = 1
+		h = h.Next
+	}
+	return false
+}
+
+// 22环形链表 II
+func detectCycle(head *ListNode) *ListNode {
+	var headMap = map[*ListNode]int{}
+	p := head
+	i := 0
+	for p != nil {
+		if _, ok := headMap[p]; ok {
+			return p
+		}
+		headMap[p] = i
+		i++
+		p = p.Next
+	}
+	return nil
+}
+
+// 23.合并两个有序链表
+func mergeTwoLists(list1 *ListNode, list2 *ListNode) *ListNode {
+	// 特殊情况
+	if list1 == nil {
+		return list2
+	}
+	if list2 == nil {
+		return list1
+	}
+
+	p1, p2 := list1, list2
+	var pHead *ListNode = nil
+	//首先拿到头
+	if p1.Val < p2.Val {
+		pHead = p1
+		p1 = p1.Next
+	} else {
+		pHead = p2
+		p2 = p2.Next
+	}
+	temp := pHead
+	// 循环
+	for p1 != nil && p2 != nil {
+		if p1.Val < p2.Val {
+			temp.Next = p1
+			p1 = p1.Next
+			temp = temp.Next
+		} else {
+			temp.Next = p2
+			p2 = p2.Next
+			temp = temp.Next
+		}
+	}
+	if p1 == nil {
+		temp.Next = p2
+	} else {
+		temp.Next = p1
+	}
+	return pHead
+}
+
+// TODO: 24-->LRU
+
+type LRUCache struct {
+	curIndex int
+	capacity int
+	valuesKV map[int]int
+	valuesVK map[int]int
+}
+
+func Constructor(capacity int) LRUCache {
+	return LRUCache{
+		curIndex: 0,
+		capacity: capacity,
+		valuesKV: make(map[int]int, capacity),
+		valuesVK: make(map[int]int, capacity),
+	}
+}
+
+func (this *LRUCache) Get(key int) int {
+	if v, ok := this.valuesKV[key]; ok {
+		return v
+	}
+	return -1
+}
+
+func (this *LRUCache) Put(key int, value int) {
+	if this.curIndex >= this.capacity {
+		// 删除
+		dKey := this.valuesVK[this.curIndex-this.capacity]
+		delete(this.valuesVK, this.curIndex-this.capacity)
+		delete(this.valuesKV, dKey)
+		// 添加
+		this.valuesKV[key] = value
+		this.valuesVK[this.curIndex] = key
+		this.curIndex++
+	} else {
+		// 存入
+		this.valuesKV[key] = value
+		this.valuesVK[this.curIndex] = key
+		this.curIndex++
+	}
+}
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * obj := Constructor(capacity);
+ * param_1 := obj.Get(key);
+ * obj.Put(key,value);
+ */
