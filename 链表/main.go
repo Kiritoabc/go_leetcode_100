@@ -234,3 +234,32 @@ func (this *LRUCache) Put(key int, value int) {
  * param_1 := obj.Get(key);
  * obj.Put(key,value);
  */
+
+// 25-->两数相加
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
+	add := 0
+	dump := &ListNode{}
+	cur := dump
+	for l1 != nil || l2 != nil || add != 0 {
+		val := add
+		if l1 != nil {
+			val += l1.Val
+			l1 = l1.Next
+		}
+		if l2 != nil {
+			val += l2.Val
+			l2 = l2.Next
+		}
+		cur.Next = &ListNode{Val: val % 10}
+		add = val / 10
+		cur = cur.Next
+	}
+	return dump.Next
+}
