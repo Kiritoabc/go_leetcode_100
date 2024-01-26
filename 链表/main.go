@@ -263,3 +263,33 @@ func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
 	}
 	return dump.Next
 }
+
+// 26. 19. 删除链表的倒数第 N 个结点
+func removeNthFromEnd(head *ListNode, n int) *ListNode {
+	dummy := &ListNode{Next: head}
+	fast, slow := head, dummy
+	for i := 0; i < n; i++ {
+		fast = fast.Next
+	}
+	for fast != nil {
+		fast = fast.Next
+		slow = slow.Next
+	}
+	slow.Next = slow.Next.Next
+	return dummy.Next
+}
+
+// 27 .24. 两两交换链表中的节点
+func swapPairs(head *ListNode) *ListNode {
+	dummy := &ListNode{Next: head}
+	temp := dummy
+	for temp.Next != nil && temp.Next.Next != nil {
+		node1 := temp.Next
+		node2 := temp.Next.Next
+		temp.Next = node2
+		node1.Next = node2.Next
+		node2.Next = node1
+		temp = node1
+	}
+	return dummy.Next
+}
