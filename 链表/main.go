@@ -293,3 +293,20 @@ func swapPairs(head *ListNode) *ListNode {
 	}
 	return dummy.Next
 }
+
+// TODO： 28. K 个一组翻转链表
+func reverseKGroup(head *ListNode, k int) *ListNode {
+
+}
+
+func reverseList1(head *ListNode) *ListNode {
+	var prev *ListNode
+	curr := head
+	for curr != nil {
+		temp := curr
+		curr.Next = prev
+		prev = curr
+		curr = temp
+	}
+	return prev
+}
