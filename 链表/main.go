@@ -296,7 +296,7 @@ func swapPairs(head *ListNode) *ListNode {
 
 // TODO： 28. K 个一组翻转链表
 func reverseKGroup(head *ListNode, k int) *ListNode {
-
+	return nil
 }
 
 func reverseList1(head *ListNode) *ListNode {
