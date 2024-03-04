@@ -215,3 +215,81 @@ func removeElements(head *ListNode, val int) *ListNode {
 
 	return dummyHead.Next
 }
+
+type MyLinkedList struct {
+	Val  int
+	Next *MyLinkedList
+	Pre  *MyLinkedList
+}
+
+func Constructor() MyLinkedList {
+	return MyLinkedList{}
+}
+
+func (this *MyLinkedList) Get(index int) int {
+	dummyhead := this
+	if dummyhead.Next == nil {
+		return -1
+	}
+	for i := 0; i < index; i++ {
+		dummyhead = dummyhead.Next
+		if dummyhead.Next == nil {
+			return -1
+		}
+	}
+	return dummyhead.Next.Val
+}
+
+func (this *MyLinkedList) AddAtHead(val int) {
+	head := &MyLinkedList{Val: val}
+	head.Pre = this
+	head.Next = this.Next
+
+	this.Next = head
+}
+
+func (this *MyLinkedList) AddAtTail(val int) {
+	cur := this
+	for cur.Next == nil {
+		cur = cur.Next
+	}
+	tail := &MyLinkedList{Val: val}
+	// add tail
+	cur.Next = tail
+	tail.Next = nil
+	tail.Pre = cur
+}
+
+func (this *MyLinkedList) AddAtIndex(index int, val int) {
+	dummyhead := this
+	for i := 0; i < index; i++ {
+		dummyhead = dummyhead.Next
+		if dummyhead == nil {
+			return
+		}
+	}
+	insert := &MyLinkedList{Val: val}
+	insert.Next = dummyhead.Next
+	insert.Pre = dummyhead
+	if dummyhead.Next != nil {
+		dummyhead.Next.Pre = insert
+	}
+	dummyhead.Next = insert
+}
+
+func (this *MyLinkedList) DeleteAtIndex(index int) {
+	cur := this
+	if cur.Next == nil {
+		return
+	}
+	for i := 0; i < index; i++ {
+		cur = cur.Next
+		if cur.Next == nil {
+			return
+		}
+	}
+	cur.Next = cur.Next.Next
+	if cur.Next != nil {
+		cur.Next.Pre = cur
+	}
+}
