@@ -89,7 +89,7 @@ func coinChange(coins []int, amount int) int {
 }
 
 func uniquePaths(m int, n int) int {
-	// dp[i][j] = dp[i-1][j] + dp[i][j]
+	// dp[i][j] = dp[i-1][j] + dp[i][j]ww
 	// init dp
 	dp := make([][]int, m+1)
 	for i := 0; i <= m; i++ {
@@ -131,5 +131,6 @@ func minPathSum(grid [][]int) int {
 }
 
 func main() {
+
 	fmt.Println(uniquePaths(1, 1))
 }
