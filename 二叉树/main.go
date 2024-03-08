@@ -293,3 +293,30 @@ func (this *MyLinkedList) DeleteAtIndex(index int) {
 		cur.Next.Pre = cur
 	}
 }
+
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+const (
+	INT_MAX = int64(^uint64((0)) >> 1)
+	INT_MIN = ^INT_MAX
+)
+
+func isValidBST(root *TreeNode) bool {
+	return dfs(root, INT_MIN, INT_MAX)
+}
+
+func dfs(node *TreeNode, mmin, mmax int64) bool {
+	if node == nil {
+		return true
+	}
+	if int64(node.Val) <= mmin || int64(node.Val) >= mmax {
+		return false
+	}
+	return dfs(node.Left, mmin, int64(node.Val)) && dfs(node.Right, int64(node.Val), mmax)
+}
