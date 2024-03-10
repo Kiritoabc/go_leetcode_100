@@ -77,13 +77,6 @@ func maxDepth(root *TreeNode) int {
 	return max(maxDepth(root.Left), maxDepth(root.Right)) + 1
 }
 
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
-
 // 31. 226. 翻转二叉树
 
 func invertTree(root *TreeNode) *TreeNode {
@@ -303,12 +296,12 @@ func (this *MyLinkedList) DeleteAtIndex(index int) {
  * }
  */
 const (
-	INT_MAX = int64(^uint64((0)) >> 1)
-	INT_MIN = ^INT_MAX
+	INT_MAX1 = int64(^uint64((0)) >> 1)
+	INT_MIN1 = int64(^INT_MAX)
 )
 
 func isValidBST(root *TreeNode) bool {
-	return dfs(root, INT_MIN, INT_MAX)
+	return dfs(root, INT_MIN1, INT_MAX1)
 }
 
 func dfs(node *TreeNode, mmin, mmax int64) bool {
@@ -319,4 +312,110 @@ func dfs(node *TreeNode, mmin, mmax int64) bool {
 		return false
 	}
 	return dfs(node.Left, mmin, int64(node.Val)) && dfs(node.Right, int64(node.Val), mmax)
+}
+
+const (
+	INT_MAX = int(^uint((0)) >> 1)
+	INT_MIN = ^INT_MAX
+)
+
+var res int
+
+func maxPathSum(root *TreeNode) int {
+	res = INT_MIN
+	if root == nil {
+		return res
+	}
+	dpTree(root)
+	return res
+}
+
+func dpTree(root *TreeNode) int {
+	if root == nil {
+		return 0
+	}
+	left := max(dpTree(root.Left), 0)
+	right := max(dpTree(root.Right), 0)
+	// 更新res
+	res = max(res, left+right+root.Val)
+	return root.Val + max(left, right)
+}
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+// 108. 将有序数组转换为二叉搜索树
+func sortedArrayToBST(nums []int) *TreeNode {
+	if len(nums) == 0 {
+		return nil
+	}
+	mid := len(nums) / 2
+	head := &TreeNode{Val: nums[mid]}
+	left := sortedArrayToBST(nums[:mid])
+	right := sortedArrayToBST(nums[mid+1:])
+	head.Left = left
+	head.Right = right
+	return head
+}
+
+//
+
+func kthSmallest(root *TreeNode, k int) int {
+	if root == nil && k == 0 {
+		return 0
+	}
+	kthSmallest(root.Left, k)
+	k--
+	if k == 0 {
+		res = root.Val
+	}
+	kthSmallest(root.Right, k)
+	return res
+}
+
+func rightSideView(root *TreeNode) []int {
+	ans := make([]int, 0)
+	if root == nil {
+		return ans
+	}
+	stack := make([]*TreeNode, 0)
+	stack = append(stack, root)
+	for len(stack) > 0 {
+		size := len(stack)
+		var v *TreeNode
+		for size != 0 {
+			v = stack[0]
+			stack = stack[1:]
+			if v.Left != nil {
+				stack = append(stack, v.Left)
+			}
+			if v.Right != nil {
+				stack = append(stack, v.Right)
+			}
+			size--
+		}
+		ans = append(ans, v.Val)
+	}
+	return ans
+}
+
+func flatten(root *TreeNode) {
+	list := preorderTraversal(root)
+	for i := 1; i < len(list); i++ {
+		prev, curr := list[i-1], list[i]
+		prev.Left, prev.Right = nil, curr
+	}
+}
+
+func preorderTraversal(root *TreeNode) []*TreeNode {
+	list := []*TreeNode{}
+	if root != nil {
+		list = append(list, root)
+		list = append(list, preorderTraversal(root.Left)...)
+		list = append(list, preorderTraversal(root.Right)...)
+	}
+	return list
 }
