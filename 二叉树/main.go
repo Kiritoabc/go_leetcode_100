@@ -1,5 +1,10 @@
 package main
 
+import (
+	"fmt"
+	"sync"
+)
+
 // 29  94. 二叉树的中序遍历
 
 /**
@@ -418,4 +423,29 @@ func preorderTraversal(root *TreeNode) []*TreeNode {
 		list = append(list, preorderTraversal(root.Right)...)
 	}
 	return list
+}
+
+func main() {
+	ch1, ch2, ch3 := make(chan struct{}), make(chan struct{}), make(chan struct{})
+
+	var wg sync.WaitGroup
+	var fmtch func(s string, ch chan struct{}, nch chan struct{})
+	fmtch = func(s string, ch chan struct{}, nch chan struct{}) {
+		defer wg.Done()
+		for i := 0; i < 10; i++ {
+			<-ch
+			fmt.Println(s)
+			nch <- struct{}{}
+		}
+
+		if s == "A" {
+			<-ch1
+		}
+	}
+	wg.Add(3)
+	go fmtch("A", ch1, ch2)
+	go fmtch("B", ch2, ch3)
+	go fmtch("C", ch3, ch1)
+	ch1 <- struct{}{}
+	wg.Wait()
 }
