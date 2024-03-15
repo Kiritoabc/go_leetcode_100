@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"sort"
 	"sync"
 )
 
@@ -111,6 +112,63 @@ func nextPermutation(nums []int) {
 	}
 }
 
+func to62RadixString(seq int64) string {
+	ch := []byte{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+		'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
+		'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+		'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D',
+		'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
+		'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'}
+	ans := make([]byte, 0)
+
+	for {
+		remainder := int(seq % 62)
+		ans = append(ans, ch[remainder])
+		seq /= 62
+		if seq == 0 {
+			break
+		}
+	}
+	sort.Slice(ans, func(i, j int) bool {
+		return i > j
+	})
+	return string(ans)
+}
+
+func exist(board [][]byte, word string) bool {
+	h, w := len(board), len(board[0])
+
+	vis := make([][]bool, h)
+	for i := range vis {
+		vis[i] = make([]bool, w)
+	}
+	ans := false
+	var dfs func(i, j, k int)
+	dfs = func(i, j, k int) {
+		// 边界检查
+		if i < 0 || i >= len(board) || j < 0 || j >= len(board[0]) || vis[i][j] || board[i][j] != word[k] || ans {
+			return
+		}
+
+		if k == len(word)-1 {
+			ans = true
+			return
+		}
+		vis[i][j] = true
+		dfs(i+1, j, k+1)
+		dfs(i-1, j, k+1)
+		dfs(i, j+1, k+1)
+		dfs(i, j-1, k+1)
+		vis[i][j] = false
+	}
+	for i := 0; i < h; i++ {
+		for j := 0; j < w; j++ {
+			dfs(i, j, 0)
+		}
+	}
+	return ans
+}
+
 func main() {
-	nextPermutation([]int{1, 3, 2})
+	println(exist([][]byte{{'A', 'B', 'C', 'E'}, {'S', 'F', 'C', 'S'}, {'A', 'D', 'E', 'E'}}, "ABCCED"))
 }

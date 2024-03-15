@@ -1,6 +1,9 @@
 package mian
 
-import "sort"
+import (
+	"sort"
+	"strings"
+)
 
 // 46. 全排列
 
@@ -167,6 +170,103 @@ func partition(s string) [][]string {
 func isPalindrome(s string) bool {
 	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
 		if s[i] != s[j] {
+			return false
+		}
+	}
+	return true
+}
+
+//79. 单词搜索
+
+func exist(board [][]byte, word string) bool {
+	h, w := len(board), len(board[0])
+
+	vis := make([][]bool, h)
+	for i := range vis {
+		vis[i] = make([]bool, w)
+	}
+	ans := false
+	var dfs func(i, j, k int)
+	dfs = func(i, j, k int) {
+		// 边界检查
+		if i < 0 || i >= len(board) || j < 0 || j >= len(board[0]) || vis[i][j] || board[i][j] != word[k] || ans {
+			return
+		}
+
+		if k == len(word)-1 {
+			ans = true
+			return
+		}
+		vis[i][j] = true
+		dfs(i+1, j, k+1)
+		dfs(i-1, j, k+1)
+		dfs(i, j+1, k+1)
+		dfs(i, j-1, k+1)
+		vis[i][j] = false
+	}
+	for i := 0; i < h; i++ {
+		for j := 0; j < w; j++ {
+			dfs(i, j, 0)
+		}
+	}
+	return ans
+}
+
+// 51. N 皇后
+
+func solveNQueens(n int) [][]string {
+	var res [][]string
+	chessboard := make([][]string, n)
+	for i := 0; i < n; i++ {
+		chessboard[i] = make([]string, n)
+	}
+	for i := 0; i < n; i++ {
+		for j := 0; j < n; j++ {
+			chessboard[i][j] = "."
+		}
+	}
+	var backtrack func(row int)
+	backtrack = func(row int) {
+		// get res
+		if row == n {
+			tmp := make([]string, n)
+			for i, rowStr := range chessboard {
+				tmp[i] = strings.Join(rowStr, "")
+			}
+			res = append(res, tmp)
+		}
+
+		// backtrack
+		for i := 0; i < n; i++ {
+			if isValid(n, row, i, chessboard) {
+				chessboard[row][i] = "Q"
+				backtrack(row + 1)
+				chessboard[row][i] = "."
+			}
+		}
+
+	}
+	backtrack(0)
+	return res
+}
+
+func isValid(n, row, col int, chessboard [][]string) bool {
+	// 列 （只需要检查上面的列即可）
+	for i := 0; i < row; i++ {
+		if chessboard[i][col] == "Q" {
+			return false
+		}
+	}
+	// 斜对角线 45 （只需要往上判断即可）
+	for i, j := row-1, col+1; i >= 0 && j < n; i, j = i-1, j+1 {
+		if chessboard[i][j] == "Q" {
+			return false
+		}
+	}
+
+	// 斜对角线 135 （只需要往上判断即可）
+	for i, j := row-1, col-1; i >= 0 && j >= 0; i, j = i-1, j-1 {
+		if chessboard[i][j] == "Q" {
 			return false
 		}
 	}
