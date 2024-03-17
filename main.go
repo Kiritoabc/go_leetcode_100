@@ -170,5 +170,7 @@ func exist(board [][]byte, word string) bool {
 }
 
 func main() {
-	println(exist([][]byte{{'A', 'B', 'C', 'E'}, {'S', 'F', 'C', 'S'}, {'A', 'D', 'E', 'E'}}, "ABCCED"))
+	n := 3
+	println(n / 2)
+
 }
