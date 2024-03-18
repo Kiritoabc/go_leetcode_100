@@ -10,12 +10,13 @@ import "sort"
 //你可以按任意顺序返回答案。
 
 func twoSum(nums []int, target int) []int {
-	for i := 0; i < len(nums); i++ {
-		temp := target - nums[i]
-		for j := i + 1; j < len(nums); j++ {
-			if temp == nums[j] {
-				return []int{i, j}
-			}
+	hmap := make(map[int]int, 0)
+	for i, v := range nums {
+		hmap[v] = i
+	}
+	for i, v := range nums {
+		if index, ok := hmap[target-v]; ok && index != i {
+			return []int{i, index}
 		}
 	}
 	return nil

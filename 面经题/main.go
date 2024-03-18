@@ -240,6 +240,11 @@ func countingSort(arr []int, maxValue int) []int {
 	return arr
 }
 
+// 堆排序
+
+//func heapSort(arr []int) []int {
+//}
+
 func combinationSum3(k int, n int) [][]int {
 	res := make([][]int, 0)
 	path := make([]int, k)

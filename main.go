@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"sort"
 	"sync"
 )
@@ -169,8 +170,57 @@ func exist(board [][]byte, word string) bool {
 	return ans
 }
 
-func main() {
-	n := 3
-	println(n / 2)
+// 定义一个 Swap 函数用于交换数组中的元素
+func swap(arr []int, i, j int) {
+	arr[i], arr[j] = arr[j], arr[i]
+}
 
+// heapify 调整函数，将节点 i 处的元素下沉到正确的位置上
+func heapify(arr []int, n int, i int) {
+	largest := i // 初始化最大值为当前节点 i
+	left := 2*i + 1
+	right := 2*i + 2
+
+	// 检查左孩子是否大于当前节点
+	if left < n && arr[left] > arr[largest] {
+		largest = left
+	}
+
+	// 检查右孩子是否大于当前找到的最大值
+	if right < n && arr[right] > arr[largest] {
+		largest = right
+	}
+
+	// 如果最大值不是当前节点，则进行交换并继续调整堆
+	if largest != i {
+		swap(arr, i, largest)
+		heapify(arr, n, largest)
+	}
+}
+
+// 堆排序函数
+func heapSort(arr []int) {
+	n := len(arr)
+
+	// 构建堆
+	for i := n/2 - 1; i >= 0; i-- {
+		heapify(arr, n, i)
+	}
+	// 从堆顶开始取出最大元素，并重新调整堆
+	for i := n - 1; i >= 0; i-- {
+		// 取出堆顶元素
+		swap(arr, 0, i)
+		// 重新构建堆
+		heapify(arr, i, 0)
+	}
+}
+
+func main() {
+	// 创建一个随机数数组
+	arr := rand.Perm(10)
+	fmt.Println("Before sorting:", arr)
+
+	heapSort(arr)
+
+	fmt.Println("After sorting:", arr)
 }
