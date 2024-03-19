@@ -110,3 +110,28 @@ func trap(height []int) int {
 	}
 	return ans
 }
+
+func trap1(height []int) int {
+	ans := 0
+	n := len(height)
+	left, right := make([]int, n), make([]int, n)
+	for i := 0; i < n; i++ {
+		if i == 0 {
+			left[i] = height[i]
+		} else {
+			left[i] = max(left[i-1], height[i])
+		}
+	}
+	for j := n - 1; j >= 0; j-- {
+		if j == n-1 {
+			right[j] = height[j]
+		} else {
+			right[j] = max(right[j+1], height[j])
+		}
+	}
+	// 获取结果 ans = min(left[i],right[i]) - height[i]
+	for i := 1; i < n-1; i++ {
+		ans += min(left[i], right[i]) - height[i]
+	}
+	return ans
+}
