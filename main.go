@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"math/rand"
+	"math"
 	"sort"
 	"sync"
 )
@@ -215,12 +215,46 @@ func heapSort(arr []int) {
 	}
 }
 
+func maxSlidingWindow(nums []int, k int) []int {
+	queue := make([]int, 0)
+	ans := make([]int, 0)
+	for i := 0; i < len(nums); i++ {
+		for i < k-1 {
+			for len(queue) > 0 && nums[i] > nums[queue[len(queue)-1]] {
+				queue = queue[:len(queue)-1]
+			}
+			queue = append(queue, i)
+			i++
+		}
+		// i == k-1 加到最后的k位置
+		for len(queue) > 0 && nums[i] > nums[queue[len(queue)-1]] {
+			queue = queue[:len(queue)-1]
+		}
+		queue = append(queue, i)
+		// 取最大元素
+		ans = append(ans, nums[queue[0]])
+		// 当前最大值的下标到达了 ，弹出
+		if i-queue[0]+1 == k {
+			queue = queue[1:]
+		}
+	}
+	return ans
+}
+
+// NewtonSqrt 使用牛顿迭代法计算并返回x的平方根
+func NewtonSqrt(x float64, epsilon float64) float64 {
+	// 初始化猜测值，通常选择x的一半作为起点
+	z := x / 2.0
+
+	// 循环直到达到所需精度
+	for math.Abs(z*z-x) > epsilon {
+		z = z - (z*z-x)/(2*z)
+	}
+
+	return z
+}
+
 func main() {
-	// 创建一个随机数数组
-	arr := rand.Perm(10)
-	fmt.Println("Before sorting:", arr)
-
-	heapSort(arr)
-
-	fmt.Println("After sorting:", arr)
+	// 求解10的平方根，并设置精度为1e-6
+	fmt.Printf("Square root of 10: %.6f\n", NewtonSqrt(10, 1e-6))
 }

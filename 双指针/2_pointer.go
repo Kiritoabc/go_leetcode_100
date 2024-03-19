@@ -69,32 +69,21 @@ func threeSum(nums []int) [][]int {
 	sort.Ints(nums)
 	ans := make([][]int, 0)
 
-	// 枚举 a
+	// 枚举a
 	for first := 0; first < n; first++ {
-		// 需要和上一次枚举的数不相同 --> 用于去重
-		if first > 0 && nums[first] == nums[first-1] {
+		if first != 0 && nums[first] == nums[first-1] {
 			continue
 		}
-		// c 对应的指针初始指向数组的最右端
 		third := n - 1
 		target := -1 * nums[first]
-		// 枚举 b
-		for second := first + 1; second < n; second++ {
-			// 需要和上一次枚举的数不相同 --> 用于去重
-			if second > first+1 && nums[second] == nums[second-1] {
+		for second := first + 1; second < third; second++ {
+			if second != first+1 && nums[second] == nums[second-1] {
 				continue
 			}
-			// 需要保证 b 的指针在 c 的指针的左侧
 			for second < third && nums[second]+nums[third] > target {
 				third--
 			}
-			// 如果指针重合，随着 b 后续的增加
-			// 就不会有满足 a+b+c=0 并且 b<c 的 c 了，
-			//可以退出循环
-			if second == third {
-				break
-			}
-			if nums[second]+nums[third] == target {
+			if third > second && nums[second]+nums[third] == target {
 				ans = append(ans, []int{nums[first], nums[second], nums[third]})
 			}
 		}
@@ -105,9 +94,9 @@ func threeSum(nums []int) [][]int {
 // 7.
 // 给定 n 个非负整数表示每个宽度为 1 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。
 func trap(height []int) int {
+	ans := 0
 	left, right := 0, len(height)-1
 	leftMax, rightMax := 0, 0
-	ans := 0
 	for left < right {
 		leftMax = max(leftMax, height[left])
 		rightMax = max(rightMax, height[right])
